@@ -3,23 +3,17 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema;
 
 const TransactionSchema = new Schema({
-  srcAccountNo: {
+    sourceAccountNumber: {
     type: String,
     required: true,
-    ref: 'Account',
   },
-  destAccountNo: {
+  destinationAccountNumber: {
     type: String,
     required: true,
-    ref: 'Account',
   },
   amount: {
     type: Number,
     required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
   },
 });
 
