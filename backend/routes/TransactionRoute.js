@@ -1,23 +1,28 @@
 import express from 'express';
-import { Account } from '../models/AccountModel.js';
+import { Transaction } from '../models/TransactionModel.js';
 
 const router = express.Router();
 
-// Save new account
+// Save new transaction
 router.post('/', async (request, response) => {
     try {
-        if (!request.body.accountNumber || request.body.balance === undefined) {
+        if (
+            !request.body.sourceAccountNumber ||
+            !request.body.destinationAccountNumber ||
+            request.body.amount === undefined
+        ) {
             return response.status(400).send({
                 message: 'Send all required fields',
             });
         }
 
-        const newAccount = {
-            accountNumber: request.body.accountNumber,
-            balance: request.body.balance,
+        const newTransaction = {
+            sourceAccountNumber: request.body.sourceAccountNumber,
+            destinationAccountNumber: request.body.destinationAccountNumber,
+            amount: request.body.amount,
         };
 
-        const result = await Account.create(newAccount);
+        const result = await Transaction.create(newTransaction);
 
         return response.status(201).send(result);
     } catch (error) {
@@ -26,10 +31,10 @@ router.post('/', async (request, response) => {
     }
 });
 
-// Get all accounts
+// Get all transactions
 router.get('/', async (request, response) => {
     try {
-        const result = await Account.find({});
+        const result = await Transaction.find({});
 
         return response.status(200).json({
             count: result.length,
@@ -41,12 +46,12 @@ router.get('/', async (request, response) => {
     }
 });
 
-// Get account by id
+// Get transaction by id
 router.get('/:id', async (request, response) => {
     try {
         const { id } = request.params;
 
-        const result = await Account.findById(id);
+        const result = await Transaction.findById(id);
 
         return response.status(200).json(result);
     } catch (error) {
@@ -55,10 +60,14 @@ router.get('/:id', async (request, response) => {
     }
 });
 
-// Update account
+// Update transaction
 router.put('/:id', async (request, response) => {
     try {
-        if (!request.body.accountNumber || request.body.balance === undefined) {
+        if (
+            !request.body.sourceAccountNumber ||
+            !request.body.destinationAccountNumber ||
+            request.body.amount === undefined
+        ) {
             return response.status(400).send({
                 message: 'Send all required fields',
             });
@@ -66,33 +75,33 @@ router.put('/:id', async (request, response) => {
 
         const { id } = request.params;
 
-        const result = await Account.findByIdAndUpdate(id, request.body, {
+        const result = await Transaction.findByIdAndUpdate(id, request.body, {
             new: true,
         });
 
         if (!result) {
-            return response.status(404).json({ message: 'Account not found' });
+            return response.status(404).json({ message: 'Transaction not found' });
         }
 
-        return response.status(200).send({ message: 'Account updated successfully' });
+        return response.status(200).send({ message: 'Transaction updated successfully' });
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
     }
 });
 
-// Delete account
+// Delete transaction
 router.delete('/:id', async (request, response) => {
     try {
         const { id } = request.params;
 
-        const result = await Account.findByIdAndDelete(id);
+        const result = await Transaction.findByIdAndDelete(id);
 
         if (!result) {
-            return response.status(404).json({ message: 'Account not found' });
+            return response.status(404).json({ message: 'Transaction not found' });
         }
 
-        return response.status(200).send({ message: 'Account deleted successfully' });
+        return response.status(200).send({ message: 'Transaction deleted successfully' });
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
