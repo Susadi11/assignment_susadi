@@ -22,11 +22,14 @@ This project is a RESTful API built using Node.js and MongoDB for handling accou
    git clone https://github.com/Susadi11/assignment_susadi.git
 
 2. Navigate to the backend folder
+   ```bash
    cd backend
 
 3. Install the dependencies
+   ```bash
    npm install
 
 4. Run the development server
+   ```bash
    npm start
 
